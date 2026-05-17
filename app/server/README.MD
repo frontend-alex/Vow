@@ -1,14 +1,14 @@
-### Added
-- cmd/api/main.go: server startup, logger, DB open, graceful shutdown.
-- internal/bootstrap/config.go: env config with defaults.
-- internal/bootstrap/db.go: Postgres connection using pgx stdlib driver.
-- internal/bootstrap/server.go: http.Server construction.
-- internal/bootstrap/logger.go: JSON slog logger.
-- internal/transport/http/router.go: health route, auth/user placeholder routes, middleware stack.
-- internal/platform/security/cors.go: CORS middleware.
-- internal/platform/security/headers.go: security headers.
-- internal/platform/security/ratelimit.go: simple in-memory IP rate limiter.
-- shared/errors/errors.go: global hardcoded error mapping.
-- shared/response/json.go: JSON success/error responses.
-- internal/transport/http/middleware/*: request ID, logging, recover, auth, role middleware.
-- Placeholder package declarations/types for core, application, infrastructure, JWT, password files so the scaffold has real Go packages.
+# Vow Server
+
+Go HTTP API for Vow.
+
+## Commands
+
+```bash
+go run ./cmd/api
+go test ./...
+make migrate-up
+docker compose -f deployments/docker/docker-compose.yml up
+```
+
+The API listens on `:8080` by default and exposes `GET /health`.
