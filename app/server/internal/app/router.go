@@ -22,7 +22,11 @@ func NewRouter(cfg config.Config, log *slog.Logger, db *pgxpool.Pool) http.Handl
 
 	docs.RegisterRoutes(mux)
 
-	routes.Router(mux, db)
+	routes.Router(mux, routes.Dependencies{
+		DB:     db,
+		Config: cfg,
+		Logger: log,
+	})
 
 	return middleware.Chain(
 		mux,

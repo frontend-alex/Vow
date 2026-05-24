@@ -3,12 +3,15 @@ package routes
 import (
 	"net/http"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/vow/app/server/internal/auth"
 )
 
-func RegisterAuth(mux *http.ServeMux, db *pgxpool.Pool) {
-	handler := auth.NewHandler(auth.NewService(auth.NewRepository(db)))
+func Authentication(mux *http.ServeMux, deps Dependencies) {
+	repository := auth.NewRepository(deps.DB)
 
-	auth.RegisterRoutes(mux, handler)
+	service := auth.NewService(repository)
+
+	handler := auth.NewHandler(service)
+
+	auth.AuthenticationRoutes(mux, handler)
 }
