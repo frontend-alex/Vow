@@ -2,15 +2,23 @@ package response
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
+
+	"github.com/vow/app/server/internal/shared/apperror"
 )
 
 type APIResponse struct {
-	Success      bool        `json:"success"`
-	Message      *string     `json:"message"`
-	ErrorMessage *string     `json:"error_message"`
-	ErrorStatus  *int        `json:"error_status"`
-	Data         interface{} `json:"data"`
+	Success bool       `json:"success"`
+	Message *string    `json:"message"`
+	Data    interface{} `json:"data"`
+	Errors  []APIError `json:"errors"`
+}
+
+type APIError struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+	Field   string `json:"field,omitempty"`
 }
 
 func JSON(w http.ResponseWriter, status int, payload APIResponse) {
@@ -18,37 +26,50 @@ func JSON(w http.ResponseWriter, status int, payload APIResponse) {
 	w.WriteHeader(status)
 
 	if err := json.NewEncoder(w).Encode(payload); err != nil {
-		http.Error(w, `{"success":false,"message":null,"error_message":"failed to encode response","error_status":500,"data":null}`, http.StatusInternalServerError)
+		http.Error(w, `{"success":false,"message":null,"data":null,"errors":[{"code":"INTERNAL_SERVER_ERROR","message":"failed to encode response"}]}`, http.StatusInternalServerError)
 	}
 }
 
 func Success(w http.ResponseWriter, status int, message string, data interface{}) {
 	JSON(w, status, APIResponse{
-		Success:      true,
-		Message:      stringPtr(message),
-		ErrorMessage: nil,
-		ErrorStatus:  nil,
-		Data:         data,
+		Success: true,
+		Message: stringPtr(message),
+		Data:    data,
+		Errors:  []APIError{},
 	})
 }
 
 func SuccessNoMessage(w http.ResponseWriter, status int, data interface{}) {
 	JSON(w, status, APIResponse{
-		Success:      true,
-		Message:      nil,
-		ErrorMessage: nil,
-		ErrorStatus:  nil,
-		Data:         data,
+		Success: true,
+		Message: nil,
+		Data:    data,
+		Errors:  []APIError{},
 	})
 }
 
-func Error(w http.ResponseWriter, status int, message string) {
-	JSON(w, status, APIResponse{
-		Success:      false,
-		Message:      nil,
-		ErrorMessage: stringPtr(message),
-		ErrorStatus:  intPtr(status),
-		Data:         nil,
+func Error(w http.ResponseWriter, err error) {
+	HandleError(w, err)
+}
+
+func HandleError(w http.ResponseWriter, err error) {
+	var appErr apperror.AppError
+	if errors.As(err, &appErr) {
+		JSON(w, appErr.Status, APIResponse{
+			Success: false,
+			Message: nil,
+			Data:    nil,
+			Errors:  mapAppError(appErr),
+		})
+		return
+	}
+
+	internal := apperror.Internal()
+	JSON(w, internal.Status, APIResponse{
+		Success: false,
+		Message: nil,
+		Data:    nil,
+		Errors:  mapAppError(internal),
 	})
 }
 
@@ -69,33 +90,46 @@ func CreatedNoMessage(w http.ResponseWriter, data interface{}) {
 }
 
 func BadRequest(w http.ResponseWriter, message string) {
-	Error(w, http.StatusBadRequest, message)
+	HandleError(w, apperror.BadRequest("BAD_REQUEST", message))
 }
 
 func Unauthorized(w http.ResponseWriter, message string) {
-	Error(w, http.StatusUnauthorized, message)
+	HandleError(w, apperror.Unauthorized("UNAUTHORIZED", message))
 }
 
 func Forbidden(w http.ResponseWriter, message string) {
-	Error(w, http.StatusForbidden, message)
+	HandleError(w, apperror.Forbidden("FORBIDDEN", message))
 }
 
 func NotFound(w http.ResponseWriter, message string) {
-	Error(w, http.StatusNotFound, message)
+	HandleError(w, apperror.NotFound("NOT_FOUND", message))
 }
 
 func Conflict(w http.ResponseWriter, message string) {
-	Error(w, http.StatusConflict, message)
+	HandleError(w, apperror.Conflict("CONFLICT", message))
 }
 
 func InternalServerError(w http.ResponseWriter) {
-	Error(w, http.StatusInternalServerError, "internal server error")
+	HandleError(w, apperror.Internal())
+}
+
+func mapAppError(err apperror.AppError) []APIError {
+	if len(err.Fields) == 0 {
+		return []APIError{{Code: err.Code, Message: err.Message}}
+	}
+
+	apiErrors := make([]APIError, 0, len(err.Fields))
+	for _, field := range err.Fields {
+		apiErrors = append(apiErrors, APIError{
+			Code:    err.Code,
+			Message: field.Message,
+			Field:   field.Field,
+		})
+	}
+
+	return apiErrors
 }
 
 func stringPtr(value string) *string {
-	return &value
-}
-
-func intPtr(value int) *int {
 	return &value
 }
