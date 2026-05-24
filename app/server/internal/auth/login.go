@@ -7,5 +7,5 @@ import (
 )
 
 func (h Handler) Login(w http.ResponseWriter, r *http.Request) {
-	response.JSON(w, http.StatusNotImplemented, map[string]string{"message": "login not implemented"})
+	response.Error(w, http.StatusNotImplemented, "login not implemented")
 }

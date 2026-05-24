@@ -7,5 +7,5 @@ import (
 )
 
 func (h Handler) Logout(w http.ResponseWriter, r *http.Request) {
-	response.JSON(w, http.StatusNotImplemented, map[string]string{"message": "logout not implemented"})
+	response.Error(w, http.StatusNotImplemented, "logout not implemented")
 }

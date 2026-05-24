@@ -1,0 +1,16 @@
+root = "."
+tmp_dir = "tmp"
+
+[build]
+cmd = "go build -o ./tmp/vow-api ./cmd/api"
+bin = "./tmp/vow-api"
+delay = 1000
+exclude_dir = ["tmp", "vendor", ".git"]
+include_ext = ["go", "toml"]
+stop_on_error = true
+
+[log]
+time = true
+
+[misc]
+clean_on_exit = true

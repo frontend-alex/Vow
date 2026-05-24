@@ -42,7 +42,7 @@ const openAPISpec = `{
         }
       }
     },
-    "/v1/auth/login": {
+    "/v1/api/auth/login": {
       "post": {
         "summary": "Log in",
         "operationId": "login",
@@ -68,7 +68,7 @@ const openAPISpec = `{
         }
       }
     },
-    "/v1/auth/register": {
+    "/v1/api/auth/register": {
       "post": {
         "summary": "Register",
         "operationId": "register",
@@ -94,7 +94,7 @@ const openAPISpec = `{
         }
       }
     },
-    "/v1/auth/logout": {
+    "/v1/api/auth/logout": {
       "post": {
         "summary": "Log out",
         "operationId": "logout",

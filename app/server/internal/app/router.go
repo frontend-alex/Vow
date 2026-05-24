@@ -17,10 +17,12 @@ func NewRouter(cfg config.Config, log *slog.Logger, db *pgxpool.Pool) http.Handl
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
-		response.JSON(w, http.StatusOK, map[string]string{"status": "ok"})
+		response.OK(w, "Server is running and healthy", nil)
 	})
+
 	docs.RegisterRoutes(mux)
-	routes.Register(mux, db)
+
+	routes.Router(mux, db)
 
 	return middleware.Chain(
 		mux,

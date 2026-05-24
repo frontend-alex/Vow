@@ -1,16 +1,28 @@
 # OS/editor
 .DS_Store
+.AppleDouble
+.LSOverride
 .idea/
 .vscode/
+*.swp
+*.swo
+*~
 
 # Environment
 .env
 .env.*
 !.env.example
 
+# Logs
+*.log
+logs/
+
 # Go
 bin/
 coverage.out
+*.coverprofile
+*.test
+server/tmp/
 
 # Flutter/Dart
 .dart_tool/

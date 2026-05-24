@@ -1,0 +1,17 @@
+# Environment
+.env
+.env.*
+!.env.example
+
+# Local runtime/build output
+tmp/
+bin/
+*.test
+
+# Test coverage
+coverage.out
+*.coverprofile
+
+# Logs
+*.log
+logs/

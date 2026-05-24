@@ -7,5 +7,5 @@ import (
 )
 
 func (h Handler) Register(w http.ResponseWriter, r *http.Request) {
-	response.JSON(w, http.StatusNotImplemented, map[string]string{"message": "register not implemented"})
+	response.Error(w, http.StatusNotImplemented, "register not implemented")
 }
