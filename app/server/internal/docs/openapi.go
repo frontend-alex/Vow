@@ -36,12 +36,17 @@ const openAPISpec = `{
                       "message": "Server is running and healthy",
                       "error_message": null,
                       "error_status": null,
+                      "error_code": null,
+                      "user_message": null,
                       "data": null
                     }
                   }
                 }
               }
             }
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
           }
         }
       }
@@ -77,6 +82,9 @@ const openAPISpec = `{
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
           }
         }
       }
@@ -112,6 +120,9 @@ const openAPISpec = `{
           },
           "409": {
             "$ref": "#/components/responses/Conflict"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
           }
         }
       }
@@ -134,14 +145,19 @@ const openAPISpec = `{
                     "value": {
                       "success": false,
                       "message": null,
-                      "error_message": "logout not implemented",
+                      "error_message": "Not implemented.",
                       "error_status": 501,
+                      "error_code": "GEN_002",
+                      "user_message": "This feature is not available yet.",
                       "data": null
                     }
                   }
                 }
               }
             }
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
           }
         }
       }
@@ -175,6 +191,9 @@ const openAPISpec = `{
           },
           "500": {
             "$ref": "#/components/responses/InternalServerError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
           }
         }
       }
@@ -249,6 +268,8 @@ const openAPISpec = `{
                       "message": "onboarding completed",
                       "error_message": null,
                       "error_status": null,
+                      "error_code": null,
+                      "user_message": null,
                       "data": null
                     }
                   }
@@ -267,6 +288,9 @@ const openAPISpec = `{
           },
           "500": {
             "$ref": "#/components/responses/InternalServerError"
+          },
+          "429": {
+            "$ref": "#/components/responses/TooManyRequests"
           }
         }
       }
@@ -320,12 +344,43 @@ const openAPISpec = `{
             }
           }
         }
+      },
+      "TooManyRequests": {
+        "description": "Too many requests",
+        "headers": {
+          "Retry-After": {
+            "description": "Seconds until the current rate limit window resets",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/APIResponse"
+            },
+            "examples": {
+              "tooManyRequests": {
+                "value": {
+                  "success": false,
+                  "message": null,
+                  "error_message": "Too many requests.",
+                  "error_status": 429,
+                  "error_code": "GEN_003",
+                  "user_message": "You are sending too many requests. Please try again later.",
+                  "data": null
+                }
+              }
+            }
+          }
+        }
       }
     },
     "schemas": {
       "APIResponse": {
         "type": "object",
-        "required": ["success", "message", "error_message", "error_status", "data"],
+        "required": ["success", "message", "error_message", "error_status", "error_code", "user_message", "data"],
         "properties": {
           "success": {
             "type": "boolean"
@@ -338,6 +393,12 @@ const openAPISpec = `{
           },
           "error_status": {
             "type": ["integer", "null"]
+          },
+          "error_code": {
+            "type": ["string", "null"]
+          },
+          "user_message": {
+            "type": ["string", "null"]
           },
           "data": true
         }

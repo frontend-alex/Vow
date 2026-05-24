@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/vow/app/server/internal/auth"
+	sharederrors "github.com/vow/app/server/internal/shared/errors"
 	"github.com/vow/app/server/internal/shared/response"
 )
 
@@ -18,19 +19,19 @@ func Auth(jwtSecret string) func(http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			header := r.Header.Get("Authorization")
 			if header == "" {
-				response.Error(w, http.StatusUnauthorized, "missing authorization header")
+				response.AppError(w, sharederrors.AuthErrors.Unauthorized)
 				return
 			}
 
 			tokenString := strings.TrimPrefix(header, "Bearer ")
 			if tokenString == header {
-				response.Error(w, http.StatusUnauthorized, "invalid authorization header")
+				response.AppError(w, sharederrors.AuthErrors.Unauthorized)
 				return
 			}
 
 			claims, err := auth.ParseAccessToken(tokenString, jwtSecret)
 			if err != nil {
-				response.Error(w, http.StatusUnauthorized, "invalid or expired token")
+				response.AppError(w, sharederrors.JWTErrors.InvalidToken)
 				return
 			}
 

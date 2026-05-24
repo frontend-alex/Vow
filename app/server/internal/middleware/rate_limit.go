@@ -7,6 +7,9 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	sharederrors "github.com/vow/app/server/internal/shared/errors"
+	"github.com/vow/app/server/internal/shared/response"
 )
 
 type rateLimitState struct {
@@ -64,7 +67,7 @@ func RateLimit(maxRequests int, window time.Duration) Middleware {
 					w.Header().Set("Retry-After", strconv.Itoa(int(retryAfter.Seconds())))
 				}
 
-				http.Error(w, http.StatusText(http.StatusTooManyRequests), http.StatusTooManyRequests)
+				response.AppError(w, sharederrors.GeneralErrors.TooManyRequests)
 				return
 			}
 

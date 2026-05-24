@@ -3,6 +3,8 @@ package middleware
 import (
 	"log/slog"
 	"net/http"
+
+	"github.com/vow/app/server/internal/shared/response"
 )
 
 func Recover(log *slog.Logger) Middleware {
@@ -11,7 +13,7 @@ func Recover(log *slog.Logger) Middleware {
 			defer func() {
 				if err := recover(); err != nil {
 					log.Error("panic_recovered", "error", err, "path", r.URL.Path)
-					http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+					response.InternalServerError(w)
 				}
 			}()
 			next.ServeHTTP(w, r)

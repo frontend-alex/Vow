@@ -5,13 +5,8 @@ import (
 	"errors"
 	"strings"
 
-	"github.com/vow/app/server/internal/shared/apperror"
+	sharederrors "github.com/vow/app/server/internal/shared/errors"
 	"gorm.io/gorm"
-)
-
-var (
-	ErrInvalidCredentials = apperror.Unauthorized("AUTH_INVALID_CREDENTIALS", "invalid email or password")
-	ErrEmailAlreadyExists = apperror.Conflict("AUTH_EMAIL_ALREADY_EXISTS", "email already exists")
 )
 
 type Service struct {
@@ -31,17 +26,18 @@ func (s Service) Register(ctx context.Context, input RegisterRequest) (AuthRespo
 	name := strings.TrimSpace(input.Name)
 
 	_, err := s.repository.GetUserByEmail(ctx, email)
+
 	if err == nil {
-		return AuthResponse{}, ErrEmailAlreadyExists
+		return AuthResponse{}, sharederrors.AuthErrors.EmailAlreadyTaken
 	}
 
 	if !errors.Is(err, gorm.ErrRecordNotFound) {
-		return AuthResponse{}, err
+		return AuthResponse{}, sharederrors.GeneralErrors.InternalServerError
 	}
 
 	passwordHash, err := HashPassword(input.Password)
 	if err != nil {
-		return AuthResponse{}, apperror.Internal()
+		return AuthResponse{}, sharederrors.GeneralErrors.InternalServerError
 	}
 
 	user, err := s.repository.CreateUser(ctx, CreateUserParams{
@@ -50,12 +46,13 @@ func (s Service) Register(ctx context.Context, input RegisterRequest) (AuthRespo
 		PasswordHash: passwordHash,
 	})
 	if err != nil {
-		return AuthResponse{}, err
+		return AuthResponse{}, sharederrors.GeneralErrors.InternalServerError
 	}
 
 	token, err := GenerateAccessToken(user.ID, user.Email, s.jwtSecret)
+
 	if err != nil {
-		return AuthResponse{}, apperror.Internal()
+		return AuthResponse{}, sharederrors.GeneralErrors.InternalServerError
 	}
 
 	return AuthResponse{
@@ -75,16 +72,16 @@ func (s Service) Login(ctx context.Context, input LoginRequest) (AuthResponse, e
 
 	user, err := s.repository.GetUserByEmail(ctx, email)
 	if err != nil {
-		return AuthResponse{}, ErrInvalidCredentials
+		return AuthResponse{}, sharederrors.AuthErrors.InvalidCredentials
 	}
 
 	if err := ComparePassword(user.PasswordHash, input.Password); err != nil {
-		return AuthResponse{}, ErrInvalidCredentials
+		return AuthResponse{}, sharederrors.AuthErrors.InvalidCredentials
 	}
 
 	token, err := GenerateAccessToken(user.ID, user.Email, s.jwtSecret)
 	if err != nil {
-		return AuthResponse{}, apperror.Internal()
+		return AuthResponse{}, sharederrors.GeneralErrors.InternalServerError
 	}
 
 	return AuthResponse{

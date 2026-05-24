@@ -2,12 +2,13 @@ package request
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
-
-	"github.com/vow/app/server/internal/shared/apperror"
 )
 
 const maxRequestBodyBytes = 1 << 20 // 1MB
+
+var ErrInvalidJSON = errors.New("invalid request body")
 
 func DecodeAndValidate[T any](w http.ResponseWriter, r *http.Request) (T, error) {
 	var input T
@@ -18,11 +19,11 @@ func DecodeAndValidate[T any](w http.ResponseWriter, r *http.Request) (T, error)
 	decoder.DisallowUnknownFields()
 
 	if err := decoder.Decode(&input); err != nil {
-		return input, apperror.BadRequest("INVALID_REQUEST_BODY", "invalid request body")
+		return input, ErrInvalidJSON
 	}
 
 	if err := Sanitize(&input); err != nil {
-		return input, apperror.BadRequest("INVALID_REQUEST_BODY", "invalid request body")
+		return input, err
 	}
 
 	if err := Validate(input); err != nil {

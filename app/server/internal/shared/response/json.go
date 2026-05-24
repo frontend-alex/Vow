@@ -2,23 +2,19 @@ package response
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 
-	"github.com/vow/app/server/internal/shared/apperror"
+	sharederrors "github.com/vow/app/server/internal/shared/errors"
 )
 
 type APIResponse struct {
-	Success bool       `json:"success"`
-	Message *string    `json:"message"`
-	Data    interface{} `json:"data"`
-	Errors  []APIError `json:"errors"`
-}
-
-type APIError struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
-	Field   string `json:"field,omitempty"`
+	Success      bool        `json:"success"`
+	Message      *string     `json:"message"`
+	ErrorMessage *string     `json:"error_message"`
+	ErrorStatus  *int        `json:"error_status"`
+	ErrorCode    *string     `json:"error_code"`
+	UserMessage  *string     `json:"user_message"`
+	Data         interface{} `json:"data"`
 }
 
 func JSON(w http.ResponseWriter, status int, payload APIResponse) {
@@ -26,50 +22,47 @@ func JSON(w http.ResponseWriter, status int, payload APIResponse) {
 	w.WriteHeader(status)
 
 	if err := json.NewEncoder(w).Encode(payload); err != nil {
-		http.Error(w, `{"success":false,"message":null,"data":null,"errors":[{"code":"INTERNAL_SERVER_ERROR","message":"failed to encode response"}]}`, http.StatusInternalServerError)
+		http.Error(w, `{"success":false,"message":null,"error_message":"failed to encode response","error_status":500,"error_code":"GEN_001","user_message":"Something went wrong. Please try again later.","data":null}`, http.StatusInternalServerError)
 	}
 }
 
 func Success(w http.ResponseWriter, status int, message string, data interface{}) {
 	JSON(w, status, APIResponse{
-		Success: true,
-		Message: stringPtr(message),
-		Data:    data,
-		Errors:  []APIError{},
+		Success:      true,
+		Message:      stringPtr(message),
+		ErrorMessage: nil,
+		ErrorStatus:  nil,
+		ErrorCode:    nil,
+		UserMessage:  nil,
+		Data:         data,
 	})
 }
 
 func SuccessNoMessage(w http.ResponseWriter, status int, data interface{}) {
 	JSON(w, status, APIResponse{
-		Success: true,
-		Message: nil,
-		Data:    data,
-		Errors:  []APIError{},
+		Success:      true,
+		Message:      nil,
+		ErrorMessage: nil,
+		ErrorStatus:  nil,
+		ErrorCode:    nil,
+		UserMessage:  nil,
+		Data:         data,
 	})
 }
 
-func Error(w http.ResponseWriter, err error) {
-	HandleError(w, err)
+func AppError(w http.ResponseWriter, apiError sharederrors.APIError) {
+	AppErrorWithMessage(w, apiError, apiError.Message)
 }
 
-func HandleError(w http.ResponseWriter, err error) {
-	var appErr apperror.AppError
-	if errors.As(err, &appErr) {
-		JSON(w, appErr.Status, APIResponse{
-			Success: false,
-			Message: nil,
-			Data:    nil,
-			Errors:  mapAppError(appErr),
-		})
-		return
-	}
-
-	internal := apperror.Internal()
-	JSON(w, internal.Status, APIResponse{
-		Success: false,
-		Message: nil,
-		Data:    nil,
-		Errors:  mapAppError(internal),
+func AppErrorWithMessage(w http.ResponseWriter, apiError sharederrors.APIError, message string) {
+	JSON(w, apiError.StatusCode, APIResponse{
+		Success:      false,
+		Message:      nil,
+		ErrorMessage: stringPtr(message),
+		ErrorStatus:  intPtr(apiError.StatusCode),
+		ErrorCode:    stringPtr(apiError.ErrorCode),
+		UserMessage:  stringPtr(apiError.UserMessage),
+		Data:         nil,
 	})
 }
 
@@ -89,47 +82,14 @@ func CreatedNoMessage(w http.ResponseWriter, data interface{}) {
 	SuccessNoMessage(w, http.StatusCreated, data)
 }
 
-func BadRequest(w http.ResponseWriter, message string) {
-	HandleError(w, apperror.BadRequest("BAD_REQUEST", message))
-}
-
-func Unauthorized(w http.ResponseWriter, message string) {
-	HandleError(w, apperror.Unauthorized("UNAUTHORIZED", message))
-}
-
-func Forbidden(w http.ResponseWriter, message string) {
-	HandleError(w, apperror.Forbidden("FORBIDDEN", message))
-}
-
-func NotFound(w http.ResponseWriter, message string) {
-	HandleError(w, apperror.NotFound("NOT_FOUND", message))
-}
-
-func Conflict(w http.ResponseWriter, message string) {
-	HandleError(w, apperror.Conflict("CONFLICT", message))
-}
-
 func InternalServerError(w http.ResponseWriter) {
-	HandleError(w, apperror.Internal())
-}
-
-func mapAppError(err apperror.AppError) []APIError {
-	if len(err.Fields) == 0 {
-		return []APIError{{Code: err.Code, Message: err.Message}}
-	}
-
-	apiErrors := make([]APIError, 0, len(err.Fields))
-	for _, field := range err.Fields {
-		apiErrors = append(apiErrors, APIError{
-			Code:    err.Code,
-			Message: field.Message,
-			Field:   field.Field,
-		})
-	}
-
-	return apiErrors
+	AppError(w, sharederrors.GeneralErrors.InternalServerError)
 }
 
 func stringPtr(value string) *string {
+	return &value
+}
+
+func intPtr(value int) *int {
 	return &value
 }
