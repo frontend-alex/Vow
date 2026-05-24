@@ -16,4 +16,5 @@ type Dependencies struct {
 
 func Router(mux *http.ServeMux, deps Dependencies) {
 	Authentication(mux, deps)
+	Onboarding(mux, deps)
 }

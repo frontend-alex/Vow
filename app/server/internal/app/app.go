@@ -29,6 +29,10 @@ func New() (*App, error) {
 		return nil, err
 	}
 
+	if err := database.AutoMigrate(db); err != nil {
+		return nil, err
+	}
+
 	return &App{config: cfg, logger: log, db: db}, nil
 }
 
