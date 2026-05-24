@@ -2,15 +2,15 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"strings"
 
+	"github.com/vow/app/server/internal/shared/apperror"
 	"gorm.io/gorm"
 )
 
 var (
-	ErrInvalidCredentials = errors.New("invalid credentials")
-	ErrEmailAlreadyExists = errors.New("email already exists")
+	ErrInvalidCredentials = apperror.Unauthorized("AUTH_INVALID_CREDENTIALS", "invalid email or password")
+	ErrEmailAlreadyExists = apperror.Conflict("AUTH_EMAIL_ALREADY_EXISTS", "email already exists")
 )
 
 type Service struct {
@@ -29,26 +29,18 @@ func (s Service) Register(ctx context.Context, input RegisterRequest) (AuthRespo
 	email := strings.TrimSpace(strings.ToLower(input.Email))
 	name := strings.TrimSpace(input.Name)
 
-	if email == "" || name == "" || input.Password == "" {
-		return AuthResponse{}, errors.New("missing required fields")
-	}
-
-	if len(input.Password) < 8 {
-		return AuthResponse{}, errors.New("password must be at least 8 characters")
-	}
-
 	_, err := s.repository.GetUserByEmail(ctx, email)
 	if err == nil {
 		return AuthResponse{}, ErrEmailAlreadyExists
 	}
 
-	if !errors.Is(err, gorm.ErrRecordNotFound) {
+	if !errorsIsRecordNotFound(err) {
 		return AuthResponse{}, err
 	}
 
 	passwordHash, err := HashPassword(input.Password)
 	if err != nil {
-		return AuthResponse{}, err
+		return AuthResponse{}, apperror.Internal()
 	}
 
 	user, err := s.repository.CreateUser(ctx, CreateUserParams{
@@ -62,7 +54,7 @@ func (s Service) Register(ctx context.Context, input RegisterRequest) (AuthRespo
 
 	token, err := GenerateAccessToken(user.ID, user.Email, s.jwtSecret)
 	if err != nil {
-		return AuthResponse{}, err
+		return AuthResponse{}, apperror.Internal()
 	}
 
 	return AuthResponse{
@@ -91,7 +83,7 @@ func (s Service) Login(ctx context.Context, input LoginRequest) (AuthResponse, e
 
 	token, err := GenerateAccessToken(user.ID, user.Email, s.jwtSecret)
 	if err != nil {
-		return AuthResponse{}, err
+		return AuthResponse{}, apperror.Internal()
 	}
 
 	return AuthResponse{
@@ -104,4 +96,8 @@ func (s Service) Login(ctx context.Context, input LoginRequest) (AuthResponse, e
 			OnboardingCompleted: user.OnboardingCompleted,
 		},
 	}, nil
+}
+
+func errorsIsRecordNotFound(err error) bool {
+	return err == gorm.ErrRecordNotFound
 }
