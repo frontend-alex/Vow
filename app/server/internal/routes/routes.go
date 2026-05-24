@@ -4,12 +4,12 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/vow/app/server/internal/config"
+	"gorm.io/gorm"
 )
 
 type Dependencies struct {
-	DB     *pgxpool.Pool
+	DB     *gorm.DB
 	Config config.Config
 	Logger *slog.Logger
 }

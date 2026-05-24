@@ -5,16 +5,16 @@ import (
 	"log/slog"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/vow/app/server/internal/config"
 	"github.com/vow/app/server/internal/platform/database"
 	"github.com/vow/app/server/internal/platform/logger"
+	"gorm.io/gorm"
 )
 
 type App struct {
 	config config.Config
 	logger *slog.Logger
-	db     *pgxpool.Pool
+	db     *gorm.DB
 }
 
 func New() (*App, error) {
@@ -33,7 +33,11 @@ func New() (*App, error) {
 }
 
 func (a *App) Run() error {
-	defer a.db.Close()
+	sqlDB, err := a.db.DB()
+	if err != nil {
+		return err
+	}
+	defer sqlDB.Close()
 
 	a.logger.Info("server_starting", "addr", a.config.HTTPAddr)
 	return newServer(a.config, NewRouter(a.config, a.logger, a.db)).ListenAndServe()

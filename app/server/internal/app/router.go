@@ -5,15 +5,15 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/vow/app/server/internal/config"
 	"github.com/vow/app/server/internal/docs"
 	"github.com/vow/app/server/internal/middleware"
 	"github.com/vow/app/server/internal/routes"
 	"github.com/vow/app/server/internal/shared/response"
+	"gorm.io/gorm"
 )
 
-func NewRouter(cfg config.Config, log *slog.Logger, db *pgxpool.Pool) http.Handler {
+func NewRouter(cfg config.Config, log *slog.Logger, db *gorm.DB) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {

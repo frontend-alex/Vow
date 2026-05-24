@@ -2,4 +2,7 @@ package errors
 
 import "errors"
 
-var ErrUnauthorized = errors.New("unauthorized")
+var (
+	ErrInvalidRegisterInput = errors.New("invalid register input")
+	ErrEmailAlreadyExists   = errors.New("email already exists")
+)
