@@ -4,10 +4,13 @@ import (
 	"context"
 	"errors"
 
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/vow/app/server/internal/platform/database"
 	"github.com/vow/app/server/internal/shared/apperror"
 	"gorm.io/gorm"
 )
+
+const postgresUniqueViolationCode = "23505"
 
 type Repository struct {
 	db *gorm.DB
@@ -47,5 +50,10 @@ func (r Repository) GetUserByEmail(ctx context.Context, email string) (database.
 }
 
 func isUniqueConstraintError(err error) bool {
-	return errors.Is(err, gorm.ErrDuplicatedKey)
+	if errors.Is(err, gorm.ErrDuplicatedKey) {
+		return true
+	}
+
+	var pgErr *pgconn.PgError
+	return errors.As(err, &pgErr) && pgErr.Code == postgresUniqueViolationCode
 }
