@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/vow/app/server/internal/shared/apperror"
 )
 
 var validate = validator.New()
@@ -21,14 +22,6 @@ func init() {
 	})
 }
 
-type ValidationError struct {
-	Fields map[string]string `json:"fields"`
-}
-
-func (e ValidationError) Error() string {
-	return "validation failed"
-}
-
 func Validate(input any) error {
 	err := validate.Struct(input)
 	if err == nil {
@@ -37,16 +30,18 @@ func Validate(input any) error {
 
 	var validationErrors validator.ValidationErrors
 	if !errors.As(err, &validationErrors) {
-		return err
+		return apperror.BadRequest("INVALID_REQUEST", "invalid request")
 	}
 
-	fields := make(map[string]string)
-
+	fields := make([]apperror.FieldError, 0, len(validationErrors))
 	for _, fieldError := range validationErrors {
-		fields[fieldError.Field()] = validationMessage(fieldError)
+		fields = append(fields, apperror.FieldError{
+			Field:   fieldError.Field(),
+			Message: validationMessage(fieldError),
+		})
 	}
 
-	return ValidationError{Fields: fields}
+	return apperror.Validation(fields)
 }
 
 func validationMessage(err validator.FieldError) string {
