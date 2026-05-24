@@ -1,17 +1,17 @@
 package auth
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
+	"github.com/vow/app/server/internal/shared/request"
 	"github.com/vow/app/server/internal/shared/response"
 )
 
 func (h Handler) Register(w http.ResponseWriter, r *http.Request) {
-	var input RegisterRequest
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		response.Error(w, http.StatusBadRequest, "invalid request body")
+	input, err := request.DecodeAndValidate[RegisterRequest](w, r)
+	if err != nil {
+		handleRequestError(w, err)
 		return
 	}
 

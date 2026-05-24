@@ -1,11 +1,11 @@
 package onboarding
 
 import (
-	"encoding/json"
 	"errors"
 	"net/http"
 
 	"github.com/vow/app/server/internal/middleware"
+	"github.com/vow/app/server/internal/shared/request"
 	"github.com/vow/app/server/internal/shared/response"
 )
 
@@ -40,9 +40,9 @@ func (h Handler) Complete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var input CompleteOnboardingRequest
-	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
-		response.Error(w, http.StatusBadRequest, "invalid request body")
+	input, err := request.DecodeAndValidate[CompleteOnboardingRequest](w, r)
+	if err != nil {
+		handleRequestError(w, err)
 		return
 	}
 
@@ -52,6 +52,21 @@ func (h Handler) Complete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.OK(w, "onboarding completed", nil)
+}
+
+func handleRequestError(w http.ResponseWriter, err error) {
+	var validationErr request.ValidationError
+	if errors.As(err, &validationErr) {
+		response.Error(w, http.StatusBadRequest, validationErr.Error())
+		return
+	}
+
+	if errors.Is(err, request.ErrInvalidJSON) {
+		response.Error(w, http.StatusBadRequest, "invalid request body")
+		return
+	}
+
+	response.Error(w, http.StatusBadRequest, "invalid request")
 }
 
 func userIDFromRequest(r *http.Request) (int64, error) {
