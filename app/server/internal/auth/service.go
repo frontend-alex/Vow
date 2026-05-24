@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"strings"
 
 	"github.com/vow/app/server/internal/shared/apperror"
@@ -34,7 +35,7 @@ func (s Service) Register(ctx context.Context, input RegisterRequest) (AuthRespo
 		return AuthResponse{}, ErrEmailAlreadyExists
 	}
 
-	if !errorsIsRecordNotFound(err) {
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
 		return AuthResponse{}, err
 	}
 
@@ -96,8 +97,4 @@ func (s Service) Login(ctx context.Context, input LoginRequest) (AuthResponse, e
 			OnboardingCompleted: user.OnboardingCompleted,
 		},
 	}, nil
-}
-
-func errorsIsRecordNotFound(err error) bool {
-	return err == gorm.ErrRecordNotFound
 }
