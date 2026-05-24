@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/vow/app/server/internal/shared/request"
@@ -11,20 +10,15 @@ import (
 func (h Handler) Register(w http.ResponseWriter, r *http.Request) {
 	input, err := request.DecodeAndValidate[RegisterRequest](w, r)
 	if err != nil {
-		handleRequestError(w, err)
+		response.HandleError(w, err)
 		return
 	}
 
 	result, err := h.service.Register(r.Context(), input)
 	if err != nil {
-		if errors.Is(err, ErrEmailAlreadyExists) {
-			response.Error(w, http.StatusConflict, "email already exists")
-			return
-		}
-
-		response.Error(w, http.StatusBadRequest, err.Error())
+		response.HandleError(w, err)
 		return
 	}
 
-	response.OK(w, "registered successfully", result)
+	response.Created(w, "registered successfully", result)
 }
