@@ -2,9 +2,10 @@ package onboarding
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
-	"strconv"
 
+	"github.com/vow/app/server/internal/middleware"
 	"github.com/vow/app/server/internal/shared/response"
 )
 
@@ -54,8 +55,10 @@ func (h Handler) Complete(w http.ResponseWriter, r *http.Request) {
 }
 
 func userIDFromRequest(r *http.Request) (int64, error) {
-	// Temporary approach until auth middleware exists.
-	// Use header: X-User-ID: 1
-	raw := r.Header.Get("X-User-ID")
-	return strconv.ParseInt(raw, 10, 64)
+	userID, ok := middleware.UserIDFromContext(r.Context())
+	if !ok {
+		return 0, errors.New("missing user id")
+	}
+
+	return userID, nil
 }

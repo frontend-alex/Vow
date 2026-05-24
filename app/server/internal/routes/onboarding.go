@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 
+	"github.com/vow/app/server/internal/middleware"
 	"github.com/vow/app/server/internal/onboarding"
 )
 
@@ -11,5 +12,7 @@ func Onboarding(mux *http.ServeMux, deps Dependencies) {
 	service := onboarding.NewService(repository)
 	handler := onboarding.NewHandler(service)
 
-	onboarding.Routes(mux, handler)
+	protected := middleware.Auth(deps.Config.JWTSecret)
+
+	onboarding.Routes(mux, handler, protected)
 }

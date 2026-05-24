@@ -9,7 +9,7 @@ import (
 func Authentication(mux *http.ServeMux, deps Dependencies) {
 	repository := auth.NewRepository(deps.DB)
 
-	service := auth.NewService(repository)
+	service := auth.NewService(repository, deps.Config.JWTSecret)
 
 	handler := auth.NewHandler(service)
 
