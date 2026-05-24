@@ -3,11 +3,18 @@ package onboarding
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/vow/app/server/internal/platform/database"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
+)
+
+var (
+	ErrOnboardingAlreadyCompleted = errors.New("onboarding already completed")
+	ErrOnboardingAlreadyStarted   = errors.New("onboarding already started")
+	ErrOnboardingNotStarted       = errors.New("onboarding not started")
 )
 
 type Service struct {
@@ -19,6 +26,25 @@ func NewService(repository Repository) Service {
 }
 
 func (s Service) Start(ctx context.Context, userID int64) (database.UserOnboarding, error) {
+	completed, err := s.repository.GetCompletedOnboarding(ctx, userID)
+
+	if err == nil {
+		return completed, ErrOnboardingAlreadyCompleted
+	}
+
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		return database.UserOnboarding{}, err
+	}
+
+	active, err := s.repository.GetActiveOnboarding(ctx, userID)
+	if err == nil {
+		return active, ErrOnboardingAlreadyStarted
+	}
+
+	if !errors.Is(err, gorm.ErrRecordNotFound) {
+		return database.UserOnboarding{}, err
+	}
+
 	onboarding := database.UserOnboarding{
 		UserID:    userID,
 		Status:    database.OnboardingStatusInProgress,
@@ -26,7 +52,7 @@ func (s Service) Start(ctx context.Context, userID int64) (database.UserOnboardi
 		StartedAt: time.Now(),
 	}
 
-	err := s.repository.CreateOnboarding(ctx, &onboarding)
+	err = s.repository.CreateOnboarding(ctx, &onboarding)
 	return onboarding, err
 }
 
@@ -34,15 +60,29 @@ func (s Service) Complete(ctx context.Context, userID int64, input CompleteOnboa
 	now := time.Now()
 
 	return s.repository.WithTransaction(ctx, func(tx *gorm.DB) error {
-		onboarding := database.UserOnboarding{
-			UserID:      userID,
-			Status:      database.OnboardingStatusCompleted,
-			Version:     1,
-			StartedAt:   now,
-			CompletedAt: &now,
+		var user database.User
+		if err := tx.Where("id = ?", userID).First(&user).Error; err != nil {
+			return err
 		}
 
-		if err := tx.Create(&onboarding).Error; err != nil {
+		if user.OnboardingCompleted {
+			return ErrOnboardingAlreadyCompleted
+		}
+
+		var onboarding database.UserOnboarding
+		if err := tx.
+			Where("user_id = ? AND status = ?", userID, database.OnboardingStatusInProgress).
+			Order("created_at DESC").
+			First(&onboarding).Error; err != nil {
+			if errors.Is(err, gorm.ErrRecordNotFound) {
+				return ErrOnboardingNotStarted
+			}
+			return err
+		}
+
+		onboarding.Status = database.OnboardingStatusCompleted
+		onboarding.CompletedAt = &now
+		if err := tx.Save(&onboarding).Error; err != nil {
 			return err
 		}
 

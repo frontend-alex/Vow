@@ -26,6 +26,16 @@ func (h Handler) Start(w http.ResponseWriter, r *http.Request) {
 
 	onboarding, err := h.service.Start(r.Context(), userID)
 	if err != nil {
+		if errors.Is(err, ErrOnboardingAlreadyStarted) {
+			response.Error(w, http.StatusConflict, "onboarding already started")
+			return
+		}
+
+		if errors.Is(err, ErrOnboardingAlreadyCompleted) {
+			response.Error(w, http.StatusConflict, "onboarding already completed")
+			return
+		}
+
 		response.Error(w, http.StatusInternalServerError, "failed to start onboarding")
 		return
 	}
@@ -47,6 +57,16 @@ func (h Handler) Complete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := h.service.Complete(r.Context(), userID, input); err != nil {
+		if errors.Is(err, ErrOnboardingAlreadyCompleted) {
+			response.Error(w, http.StatusConflict, "onboarding already completed")
+			return
+		}
+
+		if errors.Is(err, ErrOnboardingNotStarted) {
+			response.Error(w, http.StatusBadRequest, "onboarding not started")
+			return
+		}
+
 		response.Error(w, http.StatusInternalServerError, "failed to complete onboarding")
 		return
 	}

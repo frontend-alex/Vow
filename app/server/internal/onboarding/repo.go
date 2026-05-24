@@ -33,3 +33,14 @@ func (r Repository) GetActiveOnboarding(ctx context.Context, userID int64) (data
 
 	return onboarding, err
 }
+
+func (r Repository) GetCompletedOnboarding(ctx context.Context, userID int64) (database.UserOnboarding, error) {
+	var onboarding database.UserOnboarding
+
+	err := r.db.WithContext(ctx).
+		Where("user_id = ? AND status = ?", userID, database.OnboardingStatusCompleted).
+		Order("created_at DESC").
+		First(&onboarding).Error
+
+	return onboarding, err
+}

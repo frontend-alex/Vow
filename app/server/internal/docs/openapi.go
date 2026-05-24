@@ -170,6 +170,9 @@ const openAPISpec = `{
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
           "500": {
             "$ref": "#/components/responses/InternalServerError"
           }
@@ -192,6 +195,41 @@ const openAPISpec = `{
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CompleteOnboardingRequest"
+              },
+              "examples": {
+                "completeOnboarding": {
+                  "value": {
+                    "improvementGoals": ["focus", "less scrolling"],
+                    "riskMoment": "after waking up",
+                    "blockedApps": [
+                      {
+                        "appIdentifier": "com.instagram.ios",
+                        "appName": "Instagram",
+                        "appCategory": "social",
+                        "platform": "ios"
+                      }
+                    ],
+                    "wakeTime": "07:00",
+                    "repeatDays": ["monday", "tuesday", "wednesday", "thursday", "friday"],
+                    "unlockTasks": [
+                      {
+                        "taskType": "walk_steps",
+                        "title": "Walk 1000 steps",
+                        "description": "Take a short walk before unlocking apps",
+                        "requiredValue": 1000,
+                        "metadata": {}
+                      }
+                    ],
+                    "difficulty": "balanced",
+                    "priority1": "Deep work",
+                    "priority2": "Workout",
+                    "priority3": "Read",
+                    "morningIntention": "Start the day without scrolling",
+                    "desiredMorningState": "focused",
+                    "autoUnlockEnabled": true,
+                    "autoUnlockAfterMinutes": 60
+                  }
+                }
               }
             }
           }
@@ -223,6 +261,9 @@ const openAPISpec = `{
           },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
           },
           "500": {
             "$ref": "#/components/responses/InternalServerError"
@@ -460,11 +501,13 @@ const openAPISpec = `{
           "improvementGoals": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "example": "focus"
             }
           },
           "riskMoment": {
-            "type": "string"
+            "type": "string",
+            "example": "after waking up"
           },
           "blockedApps": {
             "type": "array",
@@ -494,25 +537,31 @@ const openAPISpec = `{
             "enum": ["gentle", "balanced", "strong"]
           },
           "priority1": {
-            "type": "string"
+            "type": "string",
+            "example": "Deep work"
           },
           "priority2": {
-            "type": "string"
+            "type": "string",
+            "example": "Workout"
           },
           "priority3": {
-            "type": "string"
+            "type": "string",
+            "example": "Read"
           },
           "morningIntention": {
-            "type": "string"
+            "type": "string",
+            "example": "Start the day without scrolling"
           },
           "desiredMorningState": {
-            "type": "string"
+            "type": "string",
+            "example": "focused"
           },
           "autoUnlockEnabled": {
             "type": "boolean"
           },
           "autoUnlockAfterMinutes": {
-            "type": "integer"
+            "type": "integer",
+            "example": 60
           }
         }
       },
@@ -521,13 +570,16 @@ const openAPISpec = `{
         "required": ["appIdentifier", "appName", "appCategory", "platform"],
         "properties": {
           "appIdentifier": {
-            "type": "string"
+            "type": "string",
+            "example": "com.instagram.ios"
           },
           "appName": {
-            "type": "string"
+            "type": "string",
+            "example": "Instagram"
           },
           "appCategory": {
-            "type": "string"
+            "type": "string",
+            "example": "social"
           },
           "platform": {
             "type": "string",
@@ -544,13 +596,16 @@ const openAPISpec = `{
             "enum": ["walk_steps", "drink_water", "stretch", "scan_qr", "write_intention", "breathing", "custom"]
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "example": "Walk 1000 steps"
           },
           "description": {
-            "type": "string"
+            "type": "string",
+            "example": "Take a short walk before unlocking apps"
           },
           "requiredValue": {
-            "type": ["integer", "null"]
+            "type": ["integer", "null"],
+            "example": 1000
           },
           "metadata": {
             "type": "object",
