@@ -1,0 +1,207 @@
+{
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\.opencode\\opencode.json": {
+    "mtime": 1780151032.8754773,
+    "ast_hash": "1efe24ecf938911d4f23e4b1c6ec91f7",
+    "semantic_hash": "1efe24ecf938911d4f23e4b1c6ec91f7"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\.opencode\\package.json": {
+    "mtime": 1780151115.5564284,
+    "ast_hash": "a20ea4dc284bd8c67458f0325b1fa68c",
+    "semantic_hash": "a20ea4dc284bd8c67458f0325b1fa68c"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\.opencode\\plugins\\graphify.js": {
+    "mtime": 1780150781.4352238,
+    "ast_hash": "32b67963417a30cb80544e0b2a56a98d",
+    "semantic_hash": "32b67963417a30cb80544e0b2a56a98d"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\cmd\\api\\main.go": {
+    "mtime": 1780150501.8843803,
+    "ast_hash": "4facd9e7b65a4c487e880a2f63642de5",
+    "semantic_hash": "4facd9e7b65a4c487e880a2f63642de5"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\app\\router.go": {
+    "mtime": 1780150501.8858788,
+    "ast_hash": "ca3115dda515475c67a0e8d85e3aad29",
+    "semantic_hash": "ca3115dda515475c67a0e8d85e3aad29"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\audit\\audit.go": {
+    "mtime": 1780148574.4216106,
+    "ast_hash": "579da2d73cdc6b6b911b073b41c10494",
+    "semantic_hash": "579da2d73cdc6b6b911b073b41c10494"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\audit\\audit_test.go": {
+    "mtime": 1780148574.5511384,
+    "ast_hash": "81924365a5e4185a346bec119b004326",
+    "semantic_hash": "81924365a5e4185a346bec119b004326"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\audit\\noop.go": {
+    "mtime": 1780148574.4321415,
+    "ast_hash": "3d60590e728b063b1e0fa2f068778d4d",
+    "semantic_hash": "3d60590e728b063b1e0fa2f068778d4d"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\audit\\noop_test.go": {
+    "mtime": 1780148574.43365,
+    "ast_hash": "3a729f312f22e4d60d263ba29b9df949",
+    "semantic_hash": "3a729f312f22e4d60d263ba29b9df949"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\audit\\stdlib.go": {
+    "mtime": 1780148574.4898608,
+    "ast_hash": "9bd91a909f043cdb983f639991357979",
+    "semantic_hash": "9bd91a909f043cdb983f639991357979"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\audit\\stdlib_test.go": {
+    "mtime": 1780148574.5696795,
+    "ast_hash": "57c84baa578322258b8fc95b069aad80",
+    "semantic_hash": "57c84baa578322258b8fc95b069aad80"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\audit\\wrapper.go": {
+    "mtime": 1780148574.5736885,
+    "ast_hash": "73588b2e95de965513d77ea90e0c4195",
+    "semantic_hash": "73588b2e95de965513d77ea90e0c4195"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\audit\\wrapper_test.go": {
+    "mtime": 1780148574.4276245,
+    "ast_hash": "a857e6908b04a278dc29dd3a0bed20c4",
+    "semantic_hash": "a857e6908b04a278dc29dd3a0bed20c4"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\basic\\basic.go": {
+    "mtime": 1780148574.5526395,
+    "ast_hash": "4349a49b6d91d455228b7921ba129a66",
+    "semantic_hash": "4349a49b6d91d455228b7921ba129a66"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\basic\\basic_test.go": {
+    "mtime": 1780148574.5671802,
+    "ast_hash": "b7bec05e08a0f5a85b5f67b3027a8de0",
+    "semantic_hash": "b7bec05e08a0f5a85b5f67b3027a8de0"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\jwt\\jwt.go": {
+    "mtime": 1780148574.560154,
+    "ast_hash": "793ee9d4f0cde1fa81cf2f2ddebd0d3a",
+    "semantic_hash": "793ee9d4f0cde1fa81cf2f2ddebd0d3a"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\jwt\\jwt_test.go": {
+    "mtime": 1780148574.5506392,
+    "ast_hash": "9f9caaa44447650db54649d3200fa634",
+    "semantic_hash": "9f9caaa44447650db54649d3200fa634"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\middleware\\basic.go": {
+    "mtime": 1780148574.478818,
+    "ast_hash": "1b5d0b1ffce29f4e07b6578f5d224f96",
+    "semantic_hash": "1b5d0b1ffce29f4e07b6578f5d224f96"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\middleware\\jwt.go": {
+    "mtime": 1780148574.4753108,
+    "ast_hash": "d79e238ba91293607d9627210f288e6a",
+    "semantic_hash": "d79e238ba91293607d9627210f288e6a"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\middleware\\middleware.go": {
+    "mtime": 1780150040.8495579,
+    "ast_hash": "74a4c8ef2b12fd950764b274a102cf70",
+    "semantic_hash": "74a4c8ef2b12fd950764b274a102cf70"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\middleware\\middleware_test.go": {
+    "mtime": 1780148574.4251158,
+    "ast_hash": "9836e13c38b091c0f579f4d07d2bc4e1",
+    "semantic_hash": "9836e13c38b091c0f579f4d07d2bc4e1"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\middleware\\session.go": {
+    "mtime": 1780148574.4329545,
+    "ast_hash": "1938ce26076cd50edb6b86feb7d5d8a6",
+    "semantic_hash": "1938ce26076cd50edb6b86feb7d5d8a6"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\oidc\\oidc.go": {
+    "mtime": 1780148574.494374,
+    "ast_hash": "a02453d8c0968b7f931ad956de2f2c19",
+    "semantic_hash": "a02453d8c0968b7f931ad956de2f2c19"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\provider\\apple.go": {
+    "mtime": 1780148574.5611544,
+    "ast_hash": "1517efc1abc7a40a51013228bf3e5b1c",
+    "semantic_hash": "1517efc1abc7a40a51013228bf3e5b1c"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\provider\\google.go": {
+    "mtime": 1780148574.5361135,
+    "ast_hash": "d382c54b181c3e1b2090160692be9e82",
+    "semantic_hash": "d382c54b181c3e1b2090160692be9e82"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\provider\\provider.go": {
+    "mtime": 1780148574.5165353,
+    "ast_hash": "893b6c9a1f55dc58dcf6ef6624751765",
+    "semantic_hash": "893b6c9a1f55dc58dcf6ef6624751765"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\session\\session.go": {
+    "mtime": 1780148574.5396178,
+    "ast_hash": "83d039ac6b1620260f42ef3d0ab6d64d",
+    "semantic_hash": "83d039ac6b1620260f42ef3d0ab6d64d"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\session\\session_test.go": {
+    "mtime": 1780148574.4296238,
+    "ast_hash": "dca4eb0299c9f48eccf023e8a8dd4a48",
+    "semantic_hash": "dca4eb0299c9f48eccf023e8a8dd4a48"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\storage\\memory.go": {
+    "mtime": 1780148574.4291232,
+    "ast_hash": "8e8026bf9e94d996690e9987e44bf4de",
+    "semantic_hash": "8e8026bf9e94d996690e9987e44bf4de"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\storage\\memory_test.go": {
+    "mtime": 1780148574.4612586,
+    "ast_hash": "7655564dd7a022da47fade779e818179",
+    "semantic_hash": "7655564dd7a022da47fade779e818179"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\storage\\storage.go": {
+    "mtime": 1780148587.1890552,
+    "ast_hash": "24bd70861d9fe6c3ceb7a8c12b732eea",
+    "semantic_hash": "24bd70861d9fe6c3ceb7a8c12b732eea"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\totp\\totp.go": {
+    "mtime": 1780148574.5391188,
+    "ast_hash": "ca79e50a0fd84ed082ff64a806174c6f",
+    "semantic_hash": "ca79e50a0fd84ed082ff64a806174c6f"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\totp\\totp_test.go": {
+    "mtime": 1780148574.4738114,
+    "ast_hash": "f8893264fd296af38147367565226158",
+    "semantic_hash": "f8893264fd296af38147367565226158"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\auth\\webauthn\\webauthn.go": {
+    "mtime": 1780148574.5655808,
+    "ast_hash": "ba38bd331ab3f31fe62af38738a71f6d",
+    "semantic_hash": "ba38bd331ab3f31fe62af38738a71f6d"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\db\\db.go": {
+    "mtime": 1780149351.7023094,
+    "ast_hash": "969454bd70ab88b94d18318972ce0766",
+    "semantic_hash": "969454bd70ab88b94d18318972ce0766"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\shared\\errors\\error.go": {
+    "mtime": 1780150513.699932,
+    "ast_hash": "52bfcc9d027ff060cae77fcecf7c8975",
+    "semantic_hash": "52bfcc9d027ff060cae77fcecf7c8975"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\shared\\http\\response.go": {
+    "mtime": 1780150501.8983817,
+    "ast_hash": "bfd4ef7f502d6ad867fa00354695536b",
+    "semantic_hash": "bfd4ef7f502d6ad867fa00354695536b"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\internal\\shared\\validation\\validation.go": {
+    "mtime": 1780150501.8878791,
+    "ast_hash": "621a09a43d606b4e7593df3459110398",
+    "semantic_hash": "621a09a43d606b4e7593df3459110398"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\AGENTS.md": {
+    "mtime": 1780150781.4337282,
+    "ast_hash": "752aa83aa64361ac32860f882dcff932",
+    "semantic_hash": "752aa83aa64361ac32860f882dcff932"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\.github\\workflows\\server-ci.yml": {
+    "mtime": 1780150576.4688094,
+    "ast_hash": "8a73562faa3affb286530e3dfaed55fe",
+    "semantic_hash": "8a73562faa3affb286530e3dfaed55fe"
+  },
+  "C:\\Users\\alexm\\Desktop\\6\\Programming\\Apps\\Vow\\server\\README.md": {
+    "mtime": 1780150576.4703095,
+    "ast_hash": "650358449fbc6ade33dbf893a66c9127",
+    "semantic_hash": "650358449fbc6ade33dbf893a66c9127"
+  }
+}
